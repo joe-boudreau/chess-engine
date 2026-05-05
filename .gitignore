@@ -1,3 +1,37 @@
-/dist/
+# Gradle / build output
 /.gradle/
 /build/
+/dist/
+/out/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# Eclipse
+.classpath
+.project
+.settings/
+bin/
+
+# VS Code
+.vscode/
+
+# NetBeans
+nbproject/private/
+nbbuild/
+nbdist/
+.nb-gradle/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Build artifact (produced by `./gradlew jar` at repo root)
+/jfEngine.jar
+
+# Engine constants cache (regenerated at runtime if missing)
+/resources/chess.constants

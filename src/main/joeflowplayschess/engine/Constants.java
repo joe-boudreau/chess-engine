@@ -8,8 +8,6 @@ package joeflowplayschess.engine;
 import org.apache.log4j.Logger;
 
 import java.io.*;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -169,18 +167,15 @@ public class Constants implements Serializable{
 
     public static Constants init(ClassLoader classLoader) {
 
-        URL constantsURL = classLoader.getResource("chess.constants");
-        File constantsFile;
-        try {
-            if(constantsURL != null){
-                constantsFile = new File(constantsURL.toURI());
+        try (InputStream in = classLoader.getResourceAsStream("chess.constants")) {
+            if (in != null) {
                 logger.info("Constants Initialization - Found cached version of Constants. Loading into memory.");
-                return (Constants) new ObjectInputStream(new FileInputStream(constantsFile)).readObject();
+                try (ObjectInputStream ois = new ObjectInputStream(in)) {
+                    return (Constants) ois.readObject();
+                }
             }
-        } catch (URISyntaxException e) {
-            logger.error("URI for chess.constants location invalid.", e);
         } catch (IOException e) {
-            logger.error("Error while reading chess.constants file.", e);
+            logger.error("Error while reading chess.constants resource.", e);
         } catch (ClassNotFoundException e) {
             logger.error("Invalid class. Has the serial version been modified?", e);
         }
@@ -188,7 +183,7 @@ public class Constants implements Serializable{
         Constants c = new Constants();
         logger.info("Constants Initialization - No cached version of Constants found. Generating cache file.");
         try {
-            constantsFile = new File("resources/chess.constants");
+            File constantsFile = new File("resources/chess.constants");
             new ObjectOutputStream(new FileOutputStream(constantsFile)).writeObject(c);
             logger.info("Constants Initialization - Constants written to 'resources/chess.constants' successfully");
         } catch (IOException e) {
